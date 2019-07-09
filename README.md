@@ -1,1 +1,1 @@
-# Multivariate Gaussian measures on local fields (mostly p-adic numbers) and their tropicalization.
+# Multivariate Gaussian measures on valuated fields and their tropicalization.
