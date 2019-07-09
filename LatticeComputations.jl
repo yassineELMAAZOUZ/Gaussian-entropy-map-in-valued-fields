@@ -117,12 +117,12 @@ end
 
 
 
-A = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}([t^0    0t     0t 	  0t     0t   0t ;
-												 				 t^0    t      0t 	  0t     0t   0t ;
-												 				 t^0    t^2    t^3    0t     0t   0t ;
-																 t^0    t^3    t^2    t^4    0t   0t ;
-																 t^0    t^2    t^2    t     t^3   0t ;
-																 t^0    t      t^2    t^3     t^4   t^5 ])
+A = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}([t^0    0t     0t     0t     0t   0t ;
+								 t^0    t      0t     0t     0t   0t ;
+							 	 t^0    t^2    t^3    0t     0t   0t ;
+							 	 t^0    t^3    t^2    t^4    0t   0t ;
+								 t^0    t^2    t^2    t      t^3   0t ;
+								 t^0    t      t^2    t^3     t^4   t^5 ])
 
 
 
