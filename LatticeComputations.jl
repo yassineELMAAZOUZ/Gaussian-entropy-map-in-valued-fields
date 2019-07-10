@@ -4,7 +4,9 @@ import IterTools
 
 
 
-K, t = PuiseuxSeriesField(QQ, 10, "t")
+
+
+K, t = PuiseuxSeriesField(QQ, 40, "t")
 
 """
 "normal_form" computes the normal lower triangular representation of a lattice. \n
@@ -24,14 +26,11 @@ K, t = PuiseuxSeriesField(QQ, 10, "t")
 				 1+O(t^10)  1+O(t^10)    0+O(t^10)
 				 1+O(t^10)  1+t+O(t^10)  1+O(t^10)
 """
-function normal_form(B)
+function normal_form(A::Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}})
 
-	n,d = size(B)
-
-	A = copy(B)
+	n,d = size(A)
 
 	switch = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}(undef,n,1)
-
 
 	for i = 1:n
 
@@ -77,9 +76,9 @@ end
 				0//1
 
 """
-function indep_lattice(B)
+function indep_lattice(A::Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}})
 
-	A = normal_form(B)
+	A = normal_form(A)
 
 	d = size(A)[1]
 
@@ -87,21 +86,19 @@ function indep_lattice(B)
 	indep_A[d] = valuation(A[d,d])
 
 	for i = 1:d-1
-		k = d-i
+		for j = i+1:d
 
-		container = copy(A[1:d,k])
-
-		for j = k+1:d
-			val = valuation(A[j,j]) - valuation(container[j])
-
+			val = valuation(A[j,j]) - valuation(A[j,i])
 			if val >= 0
-
-				container = t^val .* container - (t^val * container[j]//A[j,j]) .* A[1:d,j]
+				A[1:d,i] = t^val .* A[1:d,i]  - (t^val * A[j,i]//A[j,j]) .* A[1:d,j]
+			else
+				A[1:d,i] = A[1:d,i] - A[j,i]//A[j,j] .*A[1:d,j]
 
 			end
+
 		end
 
-		indep_A[k] = valuation(container[k])
+		indep_A[i] = valuation(A[i,i])
 
 	end
 
@@ -134,11 +131,11 @@ end
 				   Int64[]   => 0
 
 """
-function compute_Polynomial(A)
+function compute_Polynomial(A::Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}})
 
 	d = size(A)[1]
 
-	coefs = Dict{Array{Int64},Int64}([]=>0)
+	coefs = Dict{Array{Int64},Rational}([]=>0)
 
 	for I in IterTools.subsets(1:d,1)
 		B = normal_form(A[I,1:d])
@@ -174,27 +171,56 @@ end
 
 
 
-A = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}([t^0    0t     0t 	  0t      0t    0t   0t;
-												 				 t^0    t      0t 	  0t      0t    0t   0t;
-												 				 t^0    t^2    t^3    0t      0t    0t   0t;
-																 t^0    t^3    t^2    t^4     0t    0t   0t;
-																 t^0    t^2    t^2    t       t^3   0t   0t;
-																 t^0    t      t^2    t^3     t^4   t^5  0t;
-																 t^0    t      t+t^2  t^2     t^3   t^2  t^4])
 
+"""
+Test if a dictionary of coefficients is super-modular.
 
-B = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}([t^0    t^0     t^2    ;
-												 				 t^0    t       t^0    ;
-												 				 t^0    t^2    t^3   ])
+"""
 
+function IsSupermodular(d::Int64,P::Dict{Array{Int64},Int64})
 
-@time P = compute_Polynomial(A)
+	bool = true
 
+	for I in IterTools.subsets(1:d)
+		for J in IterTools.subsets(1:d)
+			K = sort(union(I,J))
+			L = sort(intersect(I,J))
+			if (P[I] + P[J] > P[K] + P[L])
 
-d = size(A)[1]
+				bool = false
+				break
+			end
 
+		end
 
-for I in IterTools.subsets(1:d)
+		if bool == false
+			break
+		end
+	end
 
-	println(I , "=======>",P[I])
+	return bool
 end
+
+
+
+
+M = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}([t^(1//2)      0t     0t 	  0t      0t    0t   0t    0t   0t;
+								 t^0           t      0t 	  0t      0t    0t   0t    0t   0t;
+								 t^1           t^2    t^3         0t      0t    0t   0t    0t   0t;
+								 t^(3//2)      t^3    t^2         t^4     0t    0t   0t    0t   0t;
+								 t^1           t^2    t^2         t       t^3   0t   0t    0t   0t;
+								 t^0           t      t^2         t^3     t^4   t^5  0t    0t   0t;
+								 t^2           t      t+t^2       t^2     t^3   t^2  t^4   0t   0t;
+								 t^2           t      t+t^2       t^2     t^3   t^2  t^3   t^4  0t ;
+								 t^2           t      t+t^2       t^2     t^3   t^2  t^3   t^4  t^5])
+
+
+d = size(M)[1]
+I = [1]
+B = M[I,1:d]
+
+A = normal_form(B)
+
+@time P = compute_Polynomial(M)
+
+println(IsSupermodular(d,P))
