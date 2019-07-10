@@ -6,7 +6,7 @@ import IterTools
 
 
 
-K, t = PuiseuxSeriesField(QQ, 40, "t")
+K, t = PuiseuxSeriesField(QQ, 27, "t")
 
 """
 "normal_form" computes the normal lower triangular representation of a lattice. \n
@@ -177,7 +177,7 @@ Test if a dictionary of coefficients is super-modular.
 
 """
 
-function IsSupermodular(d::Int64,P::Dict{Array{Int64},Int64})
+function IsSupermodular(d::Int64,P::Dict{Array{Int64},Rational})
 
 	bool = true
 
@@ -203,24 +203,30 @@ end
 
 
 
-
-M = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}([t^(1//2)      0t     0t 	  0t      0t    0t   0t    0t   0t;
-								 t^0           t      0t 	  0t      0t    0t   0t    0t   0t;
-								 t^1           t^2    t^3         0t      0t    0t   0t    0t   0t;
-								 t^(3//2)      t^3    t^2         t^4     0t    0t   0t    0t   0t;
-								 t^1           t^2    t^2         t       t^3   0t   0t    0t   0t;
-								 t^0           t      t^2         t^3     t^4   t^5  0t    0t   0t;
-								 t^2           t      t+t^2       t^2     t^3   t^2  t^4   0t   0t;
-								 t^2           t      t+t^2       t^2     t^3   t^2  t^3   t^4  0t ;
-								 t^2           t      t+t^2       t^2     t^3   t^2  t^3   t^4  t^5])
+EasyExample =  Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}([t^0  0t   0t;
+ 																			t^0  t^2  0t;
+ 																			t^0 t    t^2])
 
 
-d = size(M)[1]
-I = [1]
-B = M[I,1:d]
+HardExample = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}(
+[t^(1//2)     0t     0t 	  0t      0t    0t   0t    0t   0t;
+ t^0          t      0t 	  0t      0t    0t   0t    0t   0t;
+ t^1          t^2    t^3      0t      0t    0t   0t    0t   0t;
+ t^(3//2)     t^3    t^2      t^4     0t    0t   0t    0t   0t;
+ t^1          t^2    t^2      t       t^3   0t   0t    0t   0t;
+ t^0          t      t^2      t^3     t^4   t^5  0t    0t   0t;
+ t^2          t      t+t^2    t^2     t^3   t^2  t^4   0t   0t;
+ t^2          t      t+t^2    t^2     t^3   t^2  t^3   t^4  0t ;
+ t^2          t      t+t^2    t^2     t^3   t^2  t^3   t^4  t^5])
 
-A = normal_form(B)
 
-@time P = compute_Polynomial(M)
+################################################################################
+d1 = size(EasyExample)[1]
+@time P_easy = compute_Polynomial(EasyExample)
+println(IsSupermodular(d1,P_easy))
 
-println(IsSupermodular(d,P))
+
+
+d2 = size(HardExample)[1]
+@time P_hard = compute_Polynomial(HardExample)
+println(IsSupermodular(d2,P_hard))
