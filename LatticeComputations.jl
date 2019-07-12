@@ -1,25 +1,16 @@
-using Nemo
-import AbstractAlgebra
-import IterTools
 
 
-
-
-
-K, t = PuiseuxSeriesField(QQ, 27, "t")
+K, t = PuiseuxSeriesField(QQ, 20, "t")
 
 """
 "normal_form" computes the normal lower triangular representation of a lattice. \n
 	\t Input:  A a non singular matrix representing the full rank lattice (A 2d array with Nemo Puiseux series).\n
 	\t Output: normal_A a lower triangular matrix representing the same lattice as A.\n
-
 	Example:
 				A = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}([t^0    t^0     t^2    ;
 																	 			 t^0    t       t^0    ;
 																	 			 t^0    t^2     t^3   ])
-
 				normalA = normal_form(A)
-
 				julia> indep_A
 				3×3 Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq},2}:
 				 1+O(t^10)  0+O(t^10)    0+O(t^10)
@@ -61,20 +52,16 @@ end
 "indep_lattice" computes the unique maximal independence lattice of a given lattice. \n
 	\t Input:  A a non singular matrix representing the full rank lattice (A 2d array with Nemo Puiseux series).\n
 	\t Output: indep_A an array containing the valuations of the diagonal elements of the maximal independence lattice.\n
-
 	Example:
 				A = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}([t^0    t^0     t^2    ;
 																	 			 t^0    t       t^0    ;
 																	 			 t^0    t^2     t^3   ])
-
 				indep_A = indep_lattice(A)
-
 				julia> indep_A
 				3×1 Array{Rational{Int64},2}:
 				0//1
 				0//1
 				0//1
-
 """
 function indep_lattice(A::Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}})
 
@@ -113,12 +100,10 @@ end
 "compute_Polynomial" computes the multilinear polynomial corresponding to the tropicaliztion of the Gaussian measure. \n
 	\t Input:  A a non singular matrix representing the full rank lattice (A 2d array with Nemo Puiseux series).\n
 	\t Output: A dictionary of super-modular coefficients (a coefficient for every monomial).\n
-
 	Example:
 				 A = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}([t^0    0t     0t    ;
 																	 			 t^0    t^2    0t    ;
 																	 			 t^0    t      t^2   ])
-
 				 julia> compute_Polynomial(A)
 				 Dict{Array{Int64,N} where N,Int64} with 8 entries:
 				   [1, 3]    => 1
@@ -129,7 +114,6 @@ end
 				   [2, 3]    => 1
 				   [2]       => 0
 				   Int64[]   => 0
-
 """
 function compute_Polynomial(A::Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}})
 
@@ -174,7 +158,6 @@ end
 
 """
 Test if a dictionary of coefficients is super-modular.
-
 """
 
 function IsSupermodular(d::Int64,P::Dict{Array{Int64},Rational})
@@ -200,6 +183,7 @@ function IsSupermodular(d::Int64,P::Dict{Array{Int64},Rational})
 
 	return bool
 end
+
 
 
 
