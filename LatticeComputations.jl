@@ -1,3 +1,6 @@
+using Nemo
+import AbstractAlgebra
+import IterTools
 
 
 K, t = PuiseuxSeriesField(QQ, 20, "t")
