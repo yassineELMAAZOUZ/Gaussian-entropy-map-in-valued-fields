@@ -196,8 +196,8 @@ EasyExample =  Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}([t^0 
 
 
 HardExample = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}(
-[t^(1//2)     0t     0t 	  0t      0t    0t   0t    0t   0t;
- t^0          t      0t 	  0t      0t    0t   0t    0t   0t;
+[t^(1//2)     0t     0t       0t      0t    0t   0t    0t   0t;
+ t^0          t      0t       0t      0t    0t   0t    0t   0t;
  t^1          t^2    t^3      0t      0t    0t   0t    0t   0t;
  t^(3//2)     t^3    t^2      t^4     0t    0t   0t    0t   0t;
  t^1          t^2    t^2      t       t^3   0t   0t    0t   0t;
