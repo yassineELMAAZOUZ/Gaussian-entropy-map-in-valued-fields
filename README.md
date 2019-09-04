@@ -1,8 +1,8 @@
-# Tropicalization of centered non archimedean Gaussian distributions
+# Tropicalization of centered Gaussian distributions on local fields.
 
-LatticeComputation.jl is a julia script where the algorithm computing the supermodular polynomial associated to a lattice is implemented. It comes with two examples of diffrerent sizes to test the functions and get some intuituion.
+LatticeComputation.jl is a julia script I have implemented an algorithm to compute the tropicalization of Gaussian distributions on local fields ([Local fields, Gaussian measures and Brownian motions](https://arxiv.org/pdf/math/9803046.pdf)). 
 
-### Warning: This code is just a prototype and far from optimized, computationally and mathematically.
+The algorithm computes the supermodular coefficient of a tropical polynomial that gives the tail distribution function of the vector of valuations of a Gaussian Vector on $K^d$ where $K$ is a local field.
 
 
 
