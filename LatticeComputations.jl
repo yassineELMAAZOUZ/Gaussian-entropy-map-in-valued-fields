@@ -139,24 +139,18 @@ function compute_Polynomial(A::Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldE
 
 		for I in IterTools.subsets(1:d,k)
 
-			J = I[2:k]
+			J = I[1:k-1]
 
 			B = normal_form(A[I,1:d])
-			L = indep_lattice(B)
-
-			coefs[I] = coefs[J] + L[1]
+			coefs[I] = coefs[J] + valuation(B[k,k])
 
 		end
 
 	end
 
-
 	return coefs
 
 end
-
-
-
 
 
 """
@@ -218,34 +212,13 @@ function tropical_polynomial(d,P,v)
 
 end
 
-function Maxi(d,v,w)
-	m = copy(v)
-	for i in 1:d
-		m[i] = max(v[i],w[i])
-	end
-
-	return  m
-end
-
-
-function Mini(d,v,w)
-	m = copy(v)
-	for i in 1:d
-		m[i] = min(v[i],w[i])
-	end
-
-	return  m
-end
-
-
-
-
 
 
 
 Example1 =  Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}([t^0  0t   0t;
-									t^0  t^2  0t;
-									t^0  t    t^2])
+									 t^0  t^2  0t;
+			    		     			         t^0  t    t^2])
+
 Example2 = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}(
 [t^1        0t     0t       0t      0t    0t   0t    0t   0t;
  t^0        t      0t       0t      0t    0t   0t    0t   0t;
@@ -257,11 +230,8 @@ Example2 = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}(
  t^2        t      t+t^2    t^2     t^3   t^2  t^3   t^4  0t ;
  t^2        t      t+t^2    t^2     t^3   t^2  t^3   t^4  t^5])
 
-
-
-
 ################################################################################
+
 d = size(Example2)[1]
 @time P= compute_Polynomial(Example2)
-
 Print_Polynomial(d,P)
