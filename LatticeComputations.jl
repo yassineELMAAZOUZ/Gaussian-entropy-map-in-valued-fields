@@ -11,8 +11,8 @@ K, t = PuiseuxSeriesField(QQ, 20, "t")
 	\t Output: normal_A a lower triangular matrix representing the same lattice as A.\n
 	Example:
 				A = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}([t^0    t^0     t^2    ;
-																	 			 t^0    t       t^0    ;
-																	 			 t^0    t^2     t^3   ])
+												 t^0    t       t^0    ;
+												 t^0    t^2     t^3   ])
 				normalA = normal_form(A)
 				julia> indep_A
 				3×3 Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq},2}:
@@ -57,8 +57,8 @@ end
 	\t Output: indep_A an array containing the valuations of the diagonal elements of the maximal independence lattice.\n
 	Example:
 				A = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}([t^0    t^0     t^2    ;
-																	 			 t^0    t       t^0    ;
-																	 			 t^0    t^2     t^3   ])
+												 t^0    t       t^0    ;
+												 t^0    t^2     t^3   ])
 				indep_A = indep_lattice(A)
 				julia> indep_A
 				3×1 Array{Rational{Int64},2}:
@@ -100,13 +100,13 @@ end
 
 
 """
-"compute_Polynomial" computes the multilinear polynomial corresponding to the tropicaliztion of the Gaussian measure. \n
+"compute_Polynomial" computes the polynomial corresponding to the tropicaliztion of the Gaussian measure. \n
 	\t Input:  A a non singular matrix representing the full rank lattice (A 2d array with Nemo Puiseux series).\n
 	\t Output: A dictionary of super-modular coefficients (a coefficient for every monomial).\n
 	Example:
 				 A = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}([t^0    0t     0t    ;
-																	 			 t^0    t^2    0t    ;
-																	 			 t^0    t      t^2   ])
+												 t^0    t^2    0t    ;
+											 	 t^0    t      t^2   ])
 				 julia> compute_Polynomial(A)
 				 Dict{Array{Int64,N} where N,Int64} with 8 entries:
 				   [1, 3]    => 1
@@ -189,31 +189,79 @@ end
 
 
 
+function Print_Polynomial(d::Int64,P::Dict{Array{Int64},Rational})
+	for k = 1:d
+		println("Size ", k)
+		for I in IterTools.subsets(1:d,k)
+			println(I, "=========> ", P[I])
+		end
+		println("\n")
+	end
+end
 
-EasyExample =  Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}([t^0  0t   0t;
- 																			t^0  t^2  0t;
- 																			t^0 t    t^2])
+function tropical_polynomial(d,P,v)
+
+	m = 0.0
+
+	for I in IterTools.subsets(1:d)
+		v_I = 0.0
+		for i in I
+			v_I = v_I + v[i]
+		end
+
+		if m < v_I - P[I]
+			m = v_I - P[I]
+		end
+	end
+
+	return m
+
+end
+
+function Maxi(d,v,w)
+	m = copy(v)
+	for i in 1:d
+		m[i] = max(v[i],w[i])
+	end
+
+	return  m
+end
 
 
-HardExample = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}(
-[t^(1//2)     0t     0t       0t      0t    0t   0t    0t   0t;
- t^0          t      0t       0t      0t    0t   0t    0t   0t;
- t^1          t^2    t^3      0t      0t    0t   0t    0t   0t;
- t^(3//2)     t^3    t^2      t^4     0t    0t   0t    0t   0t;
- t^1          t^2    t^2      t       t^3   0t   0t    0t   0t;
- t^0          t      t^2      t^3     t^4   t^5  0t    0t   0t;
- t^2          t      t+t^2    t^2     t^3   t^2  t^4   0t   0t;
- t^2          t      t+t^2    t^2     t^3   t^2  t^3   t^4  0t ;
- t^2          t      t+t^2    t^2     t^3   t^2  t^3   t^4  t^5])
+function Mini(d,v,w)
+	m = copy(v)
+	for i in 1:d
+		m[i] = min(v[i],w[i])
+	end
+
+	return  m
+end
+
+
+
+
+
+
+
+Example1 =  Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}([t^0  0t   0t;
+									t^0  t^2  0t;
+									t^0  t    t^2])
+Example2 = Array{AbstractAlgebra.Generic.PuiseuxSeriesFieldElem{fmpq}}(
+[t^1        0t     0t       0t      0t    0t   0t    0t   0t;
+ t^0        t      0t       0t      0t    0t   0t    0t   0t;
+ t^1        t^2    t^3      0t      0t    0t   0t    0t   0t;
+ t^3        t^3    t^2      t^4     0t    0t   0t    0t   0t;
+ t^1        t^2    t^2      t       t^3   0t   0t    0t   0t;
+ t^0        t      t^2      t^3     t^4   t^5  0t    0t   0t;
+ t^2        t      t+t^2    t^2     t^3   t^2  t^4   0t   0t;
+ t^2        t      t+t^2    t^2     t^3   t^2  t^3   t^4  0t ;
+ t^2        t      t+t^2    t^2     t^3   t^2  t^3   t^4  t^5])
+
+
 
 
 ################################################################################
-d1 = size(EasyExample)[1]
-@time P_easy = compute_Polynomial(EasyExample)
-println(IsSupermodular(d1,P_easy))
+d = size(Example2)[1]
+@time P= compute_Polynomial(Example2)
 
-
-
-d2 = size(HardExample)[1]
-@time P_hard = compute_Polynomial(HardExample)
-println(IsSupermodular(d2,P_hard))
+Print_Polynomial(d,P)
