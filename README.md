@@ -1,4 +1,4 @@
-# Entropy map on non-archimedian valued fields.
+# Entropy map for non-archimedian valued fields.
 
 LatticeComputation.jl provides an implementation of an algorithm that computes the tropicalization of Gaussian distributions on local fields ([Local fields, Gaussian measures and Brownian motions](https://arxiv.org/pdf/math/9803046.pdf)). 
 
